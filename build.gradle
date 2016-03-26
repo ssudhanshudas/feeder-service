@@ -1,0 +1,64 @@
+group 'feeder-service'
+
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'appengine'
+
+def appEmail = "sudhanshu.das@jda.com"
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.26'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+
+    }
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-legacy:1.0.1.RELEASE")
+    appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.26'
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
+    compile 'javax.servlet:jstl:1.2'
+    compile 'taglibs:standard:1.1.2'
+    compile 'com.google.appengine:appengine-api-1.0-sdk:1.9.26'
+    compile("com.google.appengine.tools:appengine-gcs-client:0.4.1") {
+        exclude group: 'javax.servlet'
+    }
+    compile 'mysql:mysql-connector-java:5.1.34'
+
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-aop")
+
+    testCompile("junit:junit")
+}
+
+appengine {
+    httpPort = 8080
+    downloadSdk = true
+
+    appcfg {
+        email = "${appEmail}"
+        noCookies = true
+        oauth2 = true
+
+        logs {
+            severity = 1
+            outputFile = file('mylogs.txt')
+        }
+
+        app {
+            id = 'XXX'
+        }
+    }
+}
